@@ -1,38 +1,46 @@
 #define CATCH_CONFIG_MAIN
 #include "Catch/include/catch.hpp"
-#include "TemplatedFSM.h"
+#include "FSM.h"
 
-class TestBaseState : public tfsm::IBaseState
+class TestBaseState : public fsm::IBaseState
 {
 public:
-    TestBaseState() : IBaseState("TestBaseState")
+    TestBaseState( std::string name, fsm::FSM &fsm ) : IBaseState( name, fsm )
     {
 
     }
 };
 
 
+class InitalState : public TestBaseState
+{
+public:
+    InitalState( fsm::FSM& fsm ) : TestBaseState("InitialState", fsm)
+    {
+
+    }
+};
+
 SCENARIO( "Basic FSM" )
 {
     GIVEN( "A clean slate" )
     {
-        tfsm::FSM<TestBaseState> fsm;
+        fsm::FSM fsm;
 
         WHEN( "FSM is created" )
         {
-            THEN( "Current state is null" )
+            THEN( "Has no state" )
             {
                 REQUIRE_FALSE( fsm.HasState() );
             }
         }
         AND_WHEN("State is set")
         {
-            fsm.SetState( std::make_unique<TestBaseState>());
+            fsm.SetState(std::make_unique<InitalState>(fsm));
 
-            THEN( "FSM has state")
+            THEN( "Has state")
             {
-                REQUIRE( fsm.HasState() );
-                REQUIRE( fsm.GetState().GetName() == "TestBaseState" );
+                REQUIRE(fsm.HasState());
             }
         }
     }

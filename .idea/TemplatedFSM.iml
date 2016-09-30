@@ -5,8 +5,9 @@
       <sourceFolder url="file://$MODULE_DIR$/externals/CMakeUtils/CMakeUtils.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/test.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/include/TemplatedFSM.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dist/include/IBaseState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/FSM.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
