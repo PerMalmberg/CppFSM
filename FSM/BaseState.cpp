@@ -11,7 +11,7 @@ namespace fsm {
 //
 ///////////////////////////////////////////////////////////////////////////////
 void
-BaseState::AppendEnterChain( IEnterChain *chain )
+BaseState::AddToEnterChain( IEnterChain *chain )
 {
 	myEnterChain.push_back( chain );
 }
@@ -21,9 +21,19 @@ BaseState::AppendEnterChain( IEnterChain *chain )
 //
 ///////////////////////////////////////////////////////////////////////////////
 void
+BaseState::AddToLeaveChain( ILeaveChain *chain )
+{
+	myLeaveChain.push_front( chain );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//
+///////////////////////////////////////////////////////////////////////////////
+void
 BaseState::DoEnter()
 {
-	for( auto state : myEnterChain)
+	for( auto state : myEnterChain )
 	{
 		state->DoEnter();
 	}
@@ -36,7 +46,10 @@ BaseState::DoEnter()
 void
 BaseState::DoLeave()
 {
-
+	for( auto state : myLeaveChain )
+	{
+		state->DoLeave();
+	}
 }
 
 }

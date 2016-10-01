@@ -7,9 +7,18 @@
 #include <stdlib.h>
 #include <memory>
 #include <vector>
+#include <deque>
 #include "Enterchain.h"
 
 namespace fsm {
+
+#define SetupEnterChain( clazz ) \
+	const fsm::EnterChain<clazz> enterChain; \
+	friend class fsm::EnterChain<clazz>
+
+#define SetupLeaveChain( clazz ) \
+	const fsm::LeaveChain<clazz> leaveChain; \
+	friend class fsm::LeaveChain<clazz>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -49,14 +58,15 @@ public:
 	void DoEnter();
 
 	void DoLeave();
-
-	void AppendEnterChain( IEnterChain *chain );
+	void AddToEnterChain( IEnterChain *chain );
+	void AddToLeaveChain( ILeaveChain *chain );
 
 protected:
 	FSM &myFsm;
 	std::string myName;
 private:
-	std::vector<IEnterChain *> myEnterChain;
+	std::vector<IEnterChain*> myEnterChain;
+	std::deque<ILeaveChain*> myLeaveChain;
 
 };
 
