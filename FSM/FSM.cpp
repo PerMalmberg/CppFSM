@@ -1,6 +1,6 @@
-//
-// Created by permal on 9/30/16.
-//
+// Copyright (c) 2016 Per Malmberg
+// Licensed under MIT, see LICENSE file. 
+// Give credit where credit is due.
 
 #include <algorithm>
 #include <FSM.h>

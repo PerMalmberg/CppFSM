@@ -1,3 +1,7 @@
+// Copyright (c) 2016 Per Malmberg
+// Licensed under MIT, see LICENSE file. 
+// Give credit where credit is due. 
+
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/include/catch.hpp"
