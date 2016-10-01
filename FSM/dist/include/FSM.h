@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 #include <memory>
+#include <vector>
+#include "Enterchain.h"
 
 namespace fsm {
 
@@ -13,37 +15,49 @@ namespace fsm {
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-class IBaseState;
+class BaseState;
 
-class FSM {
+class FSM
+{
 public:
-    FSM();
+	FSM();
 
-    virtual ~FSM();
-    void SetState( std::unique_ptr<IBaseState> newState );
+	virtual ~FSM();
 
-    bool HasState() { return myCurrent != nullptr; }
+	void SetState( std::unique_ptr<BaseState> newState );
+
+	bool HasState()
+	{ return myCurrent != nullptr; }
+
 private:
-    std::unique_ptr<IBaseState> myCurrent = nullptr;
+	std::unique_ptr<BaseState> myCurrent = nullptr;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-class IBaseState
+class BaseState
 {
 public:
-    IBaseState( std::string name, FSM& fsm ) : myFsm( fsm ), myName( name ) {}
-    virtual ~IBaseState() {}
+	BaseState( std::string name, FSM &fsm ) : myFsm( fsm ), myName( name )
+	{}
 
-    virtual void Enter() {}
-    virtual void Leave() {}
+	virtual ~BaseState()
+	{}
+
+	void DoEnter();
+
+	void DoLeave();
+
+	void AppendEnterChain( IEnterChain *chain );
 
 protected:
-    FSM& myFsm;
-    std::string myName;
+	FSM &myFsm;
+	std::string myName;
 private:
+	std::vector<IEnterChain *> myEnterChain;
+
 };
 
 

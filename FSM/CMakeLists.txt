@@ -7,7 +7,9 @@ include_directories(dist/include)
 
 set(SOURCE_FILES
         dist/include/FSM.h
-        FSM.cpp)
+        dist/include/Enterchain.h
+        FSM.cpp
+        BaseState.cpp)
 
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
