@@ -14,6 +14,6 @@ endif()
 include_directories( ../externals )
 include_directories(../FSM/dist/include)
 
-set(SOURCE_FILES test.cpp)
+set(SOURCE_FILES test.cpp EnterLeave/EnterLeaveTestData.h EnterLeave/EnterLeaveState.cpp EnterLeave/EnterLeaveState.h EnterLeave/EnterLeaveDerived.cpp EnterLeave/EnterLeaveDerived.h EnterLeave/InitialState.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_link_libraries( ${PROJECT_NAME} FSM )
