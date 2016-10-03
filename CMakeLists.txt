@@ -4,7 +4,5 @@ project(FSM)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 add_subdirectory(Test)
-add_subdirectory(FSM)
 
-add_dependencies( Test FSM )
 

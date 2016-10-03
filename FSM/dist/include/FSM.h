@@ -9,66 +9,111 @@
 #include <vector>
 #include <deque>
 #include "Enterchain.h"
+#include "EventReceiver.h"
 
 namespace fsm {
 
 #define SetupEnterChain( clazz ) \
-	const fsm::EnterChain<clazz> enterChain; \
-	friend class fsm::EnterChain<clazz>
+    const fsm::EnterChain<clazz> enterChain; \
+    friend class fsm::EnterChain<clazz>
 
 #define SetupLeaveChain( clazz ) \
-	const fsm::LeaveChain<clazz> leaveChain; \
-	friend class fsm::LeaveChain<clazz>
+    const fsm::LeaveChain<clazz> leaveChain; \
+    friend class fsm::LeaveChain<clazz>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-class BaseState;
-
+template<typename FSMBaseState>
 class FSM
 {
 public:
-	FSM();
+	virtual ~FSM()
+	{
+		myCurrent.reset();
+	}
 
-	virtual ~FSM();
+	void SetState( std::unique_ptr<FSMBaseState> newState )
+	{
+		if( myCurrent )
+		{
+			myCurrent->DoLeave();
+		}
 
-	void SetState( std::unique_ptr<BaseState> newState );
+		myCurrent = std::move( newState );
+		myCurrent->DoEnter();
+	}
 
 	bool HasState()
-	{ return myCurrent != nullptr; }
+	{
+		return myCurrent != nullptr;
+	}
+
+	template<typename EventType>
+	void Event( std::unique_ptr<EventType> event )
+	{
+		if( HasState() )
+		{
+			// These two ways of calling causes ambiguous method lookup during template instantiation
+			// myCurrent->Event( std::move( event ) );
+			// myCurrent.get()->Event<EventType>( std::move( event ) );
+
+			auto* s = myCurrent.get();
+			static_cast<EventReceiver<EventType>*>( s )->Event( std::move( event ) );
+		}
+	}
 
 private:
-	std::unique_ptr<BaseState> myCurrent = nullptr;
+	std::unique_ptr<FSMBaseState> myCurrent = nullptr;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
+template <typename FSMBaseState>
 class BaseState
 {
 public:
-	BaseState( std::string name, FSM &fsm ) : myFsm( fsm ), myName( name )
+	BaseState( const std::string name, FSM<FSMBaseState>& fsm ) : myFsm( fsm ), myName( name )
 	{}
 
 	virtual ~BaseState()
 	{}
 
-	void DoEnter();
+	void AddToEnterChain( IEnterChain *chain )
+	{
+		myEnterChain.push_back( chain );
+	}
 
-	void DoLeave();
-	void AddToEnterChain( IEnterChain *chain );
-	void AddToLeaveChain( ILeaveChain *chain );
+	void AddToLeaveChain( ILeaveChain *chain )
+	{
+		myLeaveChain.push_front( chain );
+	}
+
+	void DoEnter()
+	{
+		for( auto state : myEnterChain )
+		{
+			state->DoEnter();
+		}
+	}
+
+	void DoLeave()
+	{
+		for( auto state : myLeaveChain )
+		{
+			state->DoLeave();
+		}
+	}
 
 protected:
-	FSM &myFsm;
-	std::string myName;
+	FSM<FSMBaseState>& myFsm;
+	const std::string myName;
 private:
 	std::vector<IEnterChain*> myEnterChain;
 	std::deque<ILeaveChain*> myLeaveChain;
-
 };
-
 
 }

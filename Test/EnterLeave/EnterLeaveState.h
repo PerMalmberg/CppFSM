@@ -7,11 +7,12 @@
 
 #include <FSM.h>
 #include "EnterLeaveTestData.h"
+#include "EnterLeaveBaseState.h"
 
-class EnterLeave : public fsm::BaseState
+class EnterLeave : public EnterLeaveBaseState
 {
 public:
-	EnterLeave( EnterLeaveTestData &d, std::string name, fsm::FSM &fsm );
+	EnterLeave( EnterLeaveTestData &d, std::string name, fsm::FSM<EnterLeaveBaseState> &fsm );
 
 protected:
 	EnterLeaveTestData &data;

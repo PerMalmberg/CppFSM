@@ -5,11 +5,12 @@
 #pragma once
 
 #include <FSM.h>
+#include "EnterLeaveBaseState.h"
 
-class InitialState : public fsm::BaseState
+class InitialState : public EnterLeaveBaseState
 {
 public:
-	InitialState( fsm::FSM &fsm ) : BaseState( "InitialState", fsm )
+	InitialState( fsm::FSM<EnterLeaveBaseState> &fsm ) : EnterLeaveBaseState( "InitialState", fsm )
 	{
 
 	}

@@ -3,19 +3,21 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/externals/CMakeUtils/CMakeUtils.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveDerived.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/InitialState.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveBaseState.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveDerived.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveState.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveTestData.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveState.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/test.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/Enterchain.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/FSM.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/BaseState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventBaseState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/AddEvent.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventCounter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/SubtractEvent.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

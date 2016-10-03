@@ -8,8 +8,8 @@
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-EnterLeave::EnterLeave( EnterLeaveTestData &d, std::string name, fsm::FSM &fsm ) :
-		BaseState( name, fsm ), data( d ),
+EnterLeave::EnterLeave( EnterLeaveTestData &d, std::string name, fsm::FSM<EnterLeaveBaseState> &fsm ) :
+		EnterLeaveBaseState( name, fsm ), data( d ),
 		enterChain( *this ), leaveChain( *this )
 {
 }
