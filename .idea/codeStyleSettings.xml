@@ -8,6 +8,11 @@
           <option name="FUNCTION_BRACE_PLACEMENT" value="2" />
           <option name="SPACE_WITHIN_FUNCTION_DECLARATION_PARENTHESES" value="true" />
           <option name="SPACE_WITHIN_FUNCTION_CALL_PARENTHESES" value="true" />
+          <option name="SPACE_BEFORE_POINTER_IN_DECLARATION" value="false" />
+          <option name="SPACE_AFTER_POINTER_IN_DECLARATION" value="true" />
+          <option name="SPACE_BEFORE_REFERENCE_IN_DECLARATION" value="false" />
+          <option name="SPACE_AFTER_REFERENCE_IN_DECLARATION" value="true" />
+          <option name="SPACE_BETWEEN_ADJACENT_BRACKETS" value="true" />
         </Objective-C>
         <Objective-C-extensions>
           <file>
