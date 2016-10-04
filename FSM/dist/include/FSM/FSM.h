@@ -110,7 +110,7 @@ public:
 		}
 
 		// If the event triggered a state change, make sure to tell the callee that.
-		return startCount != myStateChangeCounter ? CHANGED : STABLE;
+		return startCount == myStateChangeCounter ? STABLE : CHANGED;
 	}
 
 private:
