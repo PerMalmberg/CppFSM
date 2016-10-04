@@ -55,11 +55,13 @@ public:
 	{
 		if( HasState() )
 		{
-			// This way of calling causes ambiguous method lookup during template instantiation
-			//myCurrent->Event( std::move( event ) );
-
-			auto* s = myCurrent.get();
-			static_cast<EventReceiver<EventType>*>( s )->Event( std::move( event ) );
+			// Are you getting an ambiguous call error?
+			// Here is likely why:
+			// A 'using EventReceiver<EventType>::Event;' or an implementation of the Event<T>()
+			// method (possibly pure virtual) for each event type must be added to the first class in the
+			// inheritance chain from BaseState because inherited methods are not part of the overload lookup.
+			// SO question specific to this implementation: http://stackoverflow.com/questions/39845205/template-instantiation-ambiguity
+			myCurrent->Event( std::move( event ) );
 		}
 	}
 

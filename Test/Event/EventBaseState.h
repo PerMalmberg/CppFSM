@@ -18,4 +18,6 @@ public:
 			BaseState( name, fsm )
 	{}
 
+	virtual void Event( std::unique_ptr<AddEvent> event ) override {}
+	virtual void Event( std::unique_ptr<SubtractEvent> event ) override {}
 };
