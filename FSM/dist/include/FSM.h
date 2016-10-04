@@ -55,9 +55,8 @@ public:
 	{
 		if( HasState() )
 		{
-			// These two ways of calling causes ambiguous method lookup during template instantiation
-			// myCurrent->Event( std::move( event ) );
-			// myCurrent.get()->Event<EventType>( std::move( event ) );
+			// This way of calling causes ambiguous method lookup during template instantiation
+			//myCurrent->Event( std::move( event ) );
 
 			auto* s = myCurrent.get();
 			static_cast<EventReceiver<EventType>*>( s )->Event( std::move( event ) );
