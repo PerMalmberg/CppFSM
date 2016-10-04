@@ -17,6 +17,12 @@ include_directories( ../externals )
 include_directories( ../FSM/dist/include )
 
 set(SOURCE_FILES
+        ../FSM/dist/include/FSM/BaseState.h
+        ../FSM/dist/include/FSM/EnterChain.h
+        ../FSM/dist/include/FSM/LeaveChain.h
+        ../FSM/dist/include/FSM/EventReceiver.h
+        ../FSM/dist/include/FSM/FSM.h
+        ../FSM/dist/include/FSM/State.h
         test.cpp
         EnterLeave/EnterLeaveTestData.h
         EnterLeave/EnterLeaveState.cpp
@@ -27,9 +33,12 @@ set(SOURCE_FILES
         EnterLeave/EnterLeaveBaseState.h
         Event/StateListeningToEvents.cpp
         Event/StateListeningToEvents.h
-        Event/AddEvent.h
-        Event/SubtractEvent.h
         Event/EventBaseState.h
-        Event/EventCounter.h)
+        Event/EventCounter.h
+        Event/Events.h
+        EnterLeave/EnterChangesState.cpp
+        EnterLeave/EnterChangesState.h
+        EnterLeave/FinalState.cpp
+        EnterLeave/FinalState.h EnterLeave/LeaveChangesState.cpp EnterLeave/LeaveChangesState.h ../FSM/dist/include/FSM/IFsmLogger.h FsmTestLogger.cpp FsmTestLogger.h Event/FinalEventState.cpp Event/FinalEventState.h ../FSM/dist/include/FSM/NullLogger.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

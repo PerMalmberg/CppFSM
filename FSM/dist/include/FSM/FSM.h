@@ -8,8 +8,11 @@
 #include <memory>
 #include <vector>
 #include <deque>
-#include "Enterchain.h"
+#include "EnterChain.h"
+#include "LeaveChain.h"
 #include "EventReceiver.h"
+#include "IFsmLogger.h"
+#include "NullLogger.h"
 
 namespace fsm {
 
@@ -29,6 +32,13 @@ template<typename FSMBaseState>
 class FSM
 {
 public:
+	FSM() : myLogger( std::make_shared<NullLogger>() )
+	{}
+
+	FSM( std::shared_ptr<IFsmLogger> logger ) : myLogger( logger )
+	{}
+
+
 	virtual ~FSM()
 	{
 		myCurrent.reset();
@@ -36,23 +46,58 @@ public:
 
 	void SetState( std::unique_ptr<FSMBaseState> newState )
 	{
+		auto changeCount = myStateChangeCounter;
+
 		if( myCurrent )
 		{
-			myCurrent->DoLeave();
+			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
+			// If this happens, it means that the state overrides any other exist paths.
+
+			// Take local ownership of the current state to prevent further actions on this state
+			auto state = std::move( myCurrent );
+			myLogger->LeavingState( state->GetName() );
+			state->DoLeave();
 		}
 
-		myCurrent = std::move( newState );
-		myCurrent->DoEnter();
+		// Only set the new state if no state change already has happened prior to this point.
+		if( changeCount == myStateChangeCounter )
+		{
+			myCurrent = std::move( newState );
+			myLogger->EnteringState( myCurrent->GetName() );
+			myCurrent->DoEnter();
+			myStateChangeCounter++;
+		}
 	}
 
-	bool HasState()
+	int32_t GetStateChangeCounter() const
 	{
-		return myCurrent != nullptr;
+		return myStateChangeCounter;
 	}
 
+	std::string GetStateName()
+	{
+		return HasState() ? myCurrent->GetName() : "";
+	}
+
+	void SetLogger( std::shared_ptr<IFsmLogger> logger )
+	{
+		myLogger = logger;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	//
+	// Sends an event to the current state.
+	//
+	// Returns a State telling if the event caused a state change.
+	// NOTE: If the state changed, this means that the previous state has been
+	// destroyed and the callee must not access anything outside its current
+	// stack frame (i.e. member variables).
+	///////////////////////////////////////////////////////////////////////////
 	template<typename EventType>
-	void Event( std::unique_ptr<EventType> event )
+	State Event( std::unique_ptr<EventType> event )
 	{
+		auto startCount = myStateChangeCounter;
+
 		if( HasState() )
 		{
 			// Are you getting an ambiguous call error?
@@ -63,16 +108,20 @@ public:
 			// SO question specific to this implementation: http://stackoverflow.com/questions/39845205/template-instantiation-ambiguity
 			myCurrent->Event( std::move( event ) );
 		}
+
+		// If the event triggered a state change, make sure to tell the callee that.
+		return startCount != myStateChangeCounter ? CHANGED : STABLE;
 	}
 
 private:
 	std::unique_ptr<FSMBaseState> myCurrent = nullptr;
+	int32_t myStateChangeCounter = 0;
+	std::shared_ptr<IFsmLogger> myLogger;
+
+	bool HasState()
+	{
+		return myCurrent != nullptr;
+	}
 };
-
-///////////////////////////////////////////////////////////////////////////////
-//
-//
-///////////////////////////////////////////////////////////////////////////////
-
 
 }

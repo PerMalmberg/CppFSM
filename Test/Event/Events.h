@@ -6,6 +6,12 @@
 
 class AddEvent
 {
-public:
+};
 
+class SubtractEvent
+{
+};
+
+class ChangeStateEvent
+{
 };

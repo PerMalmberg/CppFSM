@@ -4,8 +4,12 @@
 
 #pragma once
 
-class SubtractEvent
+#include "EnterLeaveBaseState.h"
+
+class FinalState : public EnterLeaveBaseState
 {
 public:
+	FinalState( fsm::FSM<EnterLeaveBaseState>& fsm );
 
 };
+

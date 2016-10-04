@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include "State.h"
 
 namespace fsm {
 

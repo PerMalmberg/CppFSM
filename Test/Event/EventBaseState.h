@@ -6,19 +6,26 @@
 
 #include <FSM/FSM.h>
 #include <FSM/BaseState.h>
-#include "AddEvent.h"
-#include "SubtractEvent.h"
+#include "Events.h"
 
 class EventBaseState
 		: public fsm::BaseState<EventBaseState>,
 		  public fsm::EventReceiver<AddEvent>,
-		  public fsm::EventReceiver<SubtractEvent>
+		  public fsm::EventReceiver<SubtractEvent>,
+		  public fsm::EventReceiver<ChangeStateEvent>
 {
 public:
 	EventBaseState( const std::string& name, fsm::FSM<EventBaseState>& fsm ) :
 			BaseState( name, fsm )
 	{}
 
-	virtual void Event( std::unique_ptr<AddEvent> event ) override {}
-	virtual void Event( std::unique_ptr<SubtractEvent> event ) override {}
+	virtual void Event( std::unique_ptr<AddEvent> event ) override
+	{}
+
+	virtual void Event( std::unique_ptr<SubtractEvent> event ) override
+	{}
+
+	virtual void Event( std::unique_ptr<ChangeStateEvent> event ) override
+	{
+	}
 };

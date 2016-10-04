@@ -8,7 +8,7 @@
 #include <FSM/FSM.h>
 #include <FSM/EventReceiver.h>
 #include "EventBaseState.h"
-#include "AddEvent.h"
+#include "Events.h"
 #include "EventCounter.h"
 
 class StateListeningToEvents : public EventBaseState
@@ -18,6 +18,7 @@ public:
 
 	void Event( std::unique_ptr<AddEvent> event ) override;
 	void Event( std::unique_ptr<SubtractEvent> event ) override;
+	void Event( std::unique_ptr<ChangeStateEvent> event ) override;
 
 private:
 	EventCounter& myCount;

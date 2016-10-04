@@ -6,35 +6,10 @@
 
 namespace fsm {
 
-class IEnterChain
-{
-public:
-	virtual void DoEnter() = 0;
-};
-
 class ILeaveChain
 {
 public:
 	virtual void DoLeave() = 0;
-};
-
-template<typename StateClass>
-class EnterChain : IEnterChain
-{
-public:
-
-	EnterChain( StateClass &state ) : myState( state )
-	{
-		myState.AddToEnterChain( this );
-	}
-
-	void DoEnter() override
-	{
-		myState.Enter();
-	}
-
-private:
-	StateClass &myState;
 };
 
 template<typename StateClass>
