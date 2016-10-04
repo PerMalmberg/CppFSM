@@ -5,8 +5,8 @@
 #pragma once
 
 
-#include <FSM.h>
-#include <EventReceiver.h>
+#include <FSM/FSM.h>
+#include <FSM/EventReceiver.h>
 #include "EventBaseState.h"
 #include "AddEvent.h"
 #include "EventCounter.h"

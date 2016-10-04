@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <FSM.h>
-#include <BaseState.h>
+#include <FSM/FSM.h>
+#include <FSM/BaseState.h>
 #include "AddEvent.h"
 #include "SubtractEvent.h"
 

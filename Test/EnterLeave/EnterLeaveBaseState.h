@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <FSM.h>
-#include <BaseState.h>
+#include <FSM/FSM.h>
+#include <FSM/BaseState.h>
 
 class EnterLeaveBaseState : public fsm::BaseState<EnterLeaveBaseState>
 {

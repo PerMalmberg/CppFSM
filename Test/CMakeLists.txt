@@ -14,7 +14,7 @@ else()
 endif()
 
 include_directories( ../externals )
-include_directories(../FSM/dist/include)
+include_directories( ../FSM/dist/include )
 
 set(SOURCE_FILES
         test.cpp
@@ -30,6 +30,6 @@ set(SOURCE_FILES
         Event/AddEvent.h
         Event/SubtractEvent.h
         Event/EventBaseState.h
-        Event/EventCounter.h ../FSM/dist/include/BaseState.h)
+        Event/EventCounter.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

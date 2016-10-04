@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <FSM.h>
+#include <FSM/FSM.h>
 #include "EnterLeaveBaseState.h"
 
 class InitialState : public EnterLeaveBaseState

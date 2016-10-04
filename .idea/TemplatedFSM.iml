@@ -18,7 +18,6 @@
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventCounter.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/SubtractEvent.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/BaseState.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

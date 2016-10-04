@@ -5,7 +5,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/include/catch.hpp"
-#include "FSM.h"
+#include "FSM/FSM.h"
 #include "EnterLeave/InitialState.h"
 #include "EnterLeave/EnterLeaveTestData.h"
 #include "EnterLeave/EnterLeaveDerived.h"
