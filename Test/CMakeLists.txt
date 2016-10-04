@@ -30,6 +30,6 @@ set(SOURCE_FILES
         Event/AddEvent.h
         Event/SubtractEvent.h
         Event/EventBaseState.h
-        Event/EventCounter.h)
+        Event/EventCounter.h ../FSM/dist/include/BaseState.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
