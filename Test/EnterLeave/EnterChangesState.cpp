@@ -5,8 +5,8 @@
 #include "EnterChangesState.h"
 #include "FinalState.h"
 
-EnterChangesState::EnterChangesState( fsm::FSM<EnterLeaveBaseState>& fsm )
-		: EnterLeaveBaseState( "EnterChangesState", fsm ), enterChain( *this )
+EnterChangesState::EnterChangesState()
+		: EnterLeaveBaseState( "EnterChangesState" ), enterChain( *this )
 {
 
 
@@ -14,5 +14,5 @@ EnterChangesState::EnterChangesState( fsm::FSM<EnterLeaveBaseState>& fsm )
 
 void EnterChangesState::Enter()
 {
-	myFsm.SetState( std::make_unique<FinalState>( myFsm ) );
+	GetFSM().SetState( std::make_unique<FinalState>() );
 }

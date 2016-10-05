@@ -9,7 +9,7 @@
 class FinalEventState : public EventBaseState
 {
 public:
-	FinalEventState( fsm::FSM<EventBaseState>& fsm );
+	FinalEventState();
 
 };
 

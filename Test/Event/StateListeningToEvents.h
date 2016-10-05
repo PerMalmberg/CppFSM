@@ -14,7 +14,7 @@
 class StateListeningToEvents : public EventBaseState
 {
 public:
-	StateListeningToEvents( fsm::FSM<EventBaseState>& fsm, EventCounter& count );
+	StateListeningToEvents( EventCounter& count );
 
 	void Event( std::unique_ptr<AddEvent> event ) override;
 	void Event( std::unique_ptr<SubtractEvent> event ) override;

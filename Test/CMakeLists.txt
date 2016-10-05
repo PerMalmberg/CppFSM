@@ -23,6 +23,8 @@ set(SOURCE_FILES
         ../FSM/dist/include/FSM/EventReceiver.h
         ../FSM/dist/include/FSM/FSM.h
         ../FSM/dist/include/FSM/State.h
+        ../FSM/dist/include/FSM/IFsmLogger.h
+        ../FSM/dist/include/FSM/NullLogger.h
         test.cpp
         EnterLeave/EnterLeaveTestData.h
         EnterLeave/EnterLeaveState.cpp
@@ -31,6 +33,8 @@ set(SOURCE_FILES
         EnterLeave/EnterLeaveDerived.h
         EnterLeave/InitialState.h
         EnterLeave/EnterLeaveBaseState.h
+        EnterLeave/LeaveChangesState.cpp
+        EnterLeave/LeaveChangesState.h
         Event/StateListeningToEvents.cpp
         Event/StateListeningToEvents.h
         Event/EventBaseState.h
@@ -39,6 +43,22 @@ set(SOURCE_FILES
         EnterLeave/EnterChangesState.cpp
         EnterLeave/EnterChangesState.h
         EnterLeave/FinalState.cpp
-        EnterLeave/FinalState.h EnterLeave/LeaveChangesState.cpp EnterLeave/LeaveChangesState.h ../FSM/dist/include/FSM/IFsmLogger.h FsmTestLogger.cpp FsmTestLogger.h Event/FinalEventState.cpp Event/FinalEventState.h ../FSM/dist/include/FSM/NullLogger.h)
+        EnterLeave/FinalState.h
+        FsmTestLogger.cpp
+        FsmTestLogger.h
+        Event/FinalEventState.cpp
+        Event/FinalEventState.h
+        StateDriven/StateDrivenBaseState.cpp
+        StateDriven/StateDrivenBaseState.h
+        StateDriven/AState.cpp
+        StateDriven/AState.h
+        StateDriven/BState.cpp
+        StateDriven/BState.h
+        StateDriven/CState.cpp
+        StateDriven/CState.h
+        StateDriven/DState.cpp
+        StateDriven/DState.h
+        StateDriven/Events/GoToBEvent.h
+        StateDriven/Events/GoToCEvent.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

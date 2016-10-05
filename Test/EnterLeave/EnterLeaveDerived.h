@@ -9,7 +9,7 @@
 class EnterLeaveDerived : public EnterLeave
 {
 public:
-	EnterLeaveDerived( EnterLeaveTestData &d, fsm::FSM<EnterLeaveBaseState> &fsm );
+	EnterLeaveDerived( EnterLeaveTestData &d );
 
 private:
 	void Enter();

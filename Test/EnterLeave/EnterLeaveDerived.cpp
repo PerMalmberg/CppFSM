@@ -8,8 +8,8 @@
 //
 //
 ///////////////////////////////////////////////////////////////////////////////
-EnterLeaveDerived::EnterLeaveDerived( EnterLeaveTestData &d, fsm::FSM<EnterLeaveBaseState> &fsm ) :
-		EnterLeave( d, "EnterLeaveDerived", fsm ),
+EnterLeaveDerived::EnterLeaveDerived( EnterLeaveTestData &d ) :
+		EnterLeave( d, "EnterLeaveDerived" ),
 		enterChain( *this ), leaveChain( *this )
 {
 

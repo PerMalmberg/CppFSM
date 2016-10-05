@@ -4,5 +4,5 @@
 
 #include "FinalEventState.h"
 
-FinalEventState::FinalEventState( fsm::FSM<EventBaseState>& fsm ) : EventBaseState( "FinalEventState", fsm )
+FinalEventState::FinalEventState() : EventBaseState( "FinalEventState" )
 {}

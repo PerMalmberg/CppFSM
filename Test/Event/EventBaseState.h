@@ -15,8 +15,8 @@ class EventBaseState
 		  public fsm::EventReceiver<ChangeStateEvent>
 {
 public:
-	EventBaseState( const std::string& name, fsm::FSM<EventBaseState>& fsm ) :
-			BaseState( name, fsm )
+	EventBaseState( const std::string& name ) :
+			BaseState( name )
 	{}
 
 	virtual void Event( std::unique_ptr<AddEvent> event ) override

@@ -36,15 +36,20 @@ public:
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	FSM() : myLogger( std::make_shared<NullLogger>() )
-	{}
+	FSM( std::unique_ptr<FSMBaseState> initialState )
+			: FSM( initialState, std::make_shared<NullLogger>() )
+	{
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	FSM( std::shared_ptr<IFsmLogger> logger ) : myLogger( logger )
-	{}
+	FSM( std::unique_ptr<FSMBaseState> initialState, std::shared_ptr<IFsmLogger> logger )
+			: myLogger( logger )
+	{
+		SetState( std::move( initialState ) );
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -53,35 +58,6 @@ public:
 	virtual ~FSM()
 	{
 		myCurrent.reset();
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	//
-	//
-	///////////////////////////////////////////////////////////////////////////
-	void SetState( std::unique_ptr<FSMBaseState> newState )
-	{
-		auto changeCount = myStateChangeCounter;
-
-		if( myCurrent )
-		{
-			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
-			// If this happens, it means that the state overrides any other exist paths.
-
-			// Take local ownership of the current state to prevent further actions on this state
-			auto state = std::move( myCurrent );
-			myLogger->LeavingState( state->GetName() );
-			state->DoLeave();
-		}
-
-		// Only set the new state if no state change already has happened prior to this point.
-		if( changeCount == myStateChangeCounter )
-		{
-			myCurrent = std::move( newState );
-			myLogger->EnteringState( myCurrent->GetName() );
-			myCurrent->DoEnter();
-			myStateChangeCounter++;
-		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -100,15 +76,6 @@ public:
 	std::string GetStateName()
 	{
 		return HasState() ? myCurrent->GetName() : "";
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	//
-	//
-	///////////////////////////////////////////////////////////////////////////
-	void SetLogger( std::shared_ptr<IFsmLogger> logger )
-	{
-		myLogger = logger;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -140,15 +107,55 @@ public:
 		return startCount == myStateChangeCounter ? STABLE : CHANGED;
 	}
 
-private:
-	std::unique_ptr<FSMBaseState> myCurrent = nullptr;
-	int32_t myStateChangeCounter = 0;
-	std::shared_ptr<IFsmLogger> myLogger;
+	///////////////////////////////////////////////////////////////////////////
+	//
+	// This methods sets the current state.
+	// Only meant to be called from a class inheriting from FSMBaseState,
+	// i.e. not from outside a state.
+	//
+	///////////////////////////////////////////////////////////////////////////
+	void SetState( std::unique_ptr<FSMBaseState> newState )
+	{
+		auto changeCount = myStateChangeCounter;
 
+		if( myCurrent )
+		{
+			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
+			// If this happens, it means that the state overrides any other exist paths.
+
+			// Take local ownership of the current state to prevent further actions on this state.
+			auto state = std::move( myCurrent );
+			myLogger->LeavingState( state->GetName() );
+			state->DoLeave();
+		}
+
+		// Only set the new state if no state change already has happened prior to this point.
+		// For example, a state may change state in its Enter() or Leave() chain. In these cases
+		// we only want the last state in the chain to be set.
+		if( changeCount == myStateChangeCounter )
+		{
+			myCurrent = std::move( newState );
+			myCurrent->SetFSM( this );
+			myLogger->EnteringState( myCurrent->GetName() );
+			myCurrent->DoEnter();
+			myStateChangeCounter++;
+		}
+	}
+
+private:
+	///////////////////////////////////////////////////////////////////////////
+	//
+	//
+	///////////////////////////////////////////////////////////////////////////
 	bool HasState()
 	{
 		return myCurrent != nullptr;
 	}
+
+
+	std::unique_ptr<FSMBaseState> myCurrent;
+	int32_t myStateChangeCounter = 0;
+	std::shared_ptr<IFsmLogger> myLogger;
 };
 
 }

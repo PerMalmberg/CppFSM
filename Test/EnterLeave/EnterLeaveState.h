@@ -12,7 +12,7 @@
 class EnterLeave : public EnterLeaveBaseState
 {
 public:
-	EnterLeave( EnterLeaveTestData &d, std::string name, fsm::FSM<EnterLeaveBaseState> &fsm );
+	EnterLeave( EnterLeaveTestData &d, std::string name );
 
 protected:
 	EnterLeaveTestData &data;

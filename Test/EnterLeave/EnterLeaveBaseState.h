@@ -10,8 +10,8 @@
 class EnterLeaveBaseState : public fsm::BaseState<EnterLeaveBaseState>
 {
 public:
-	EnterLeaveBaseState( const std::string& name, fsm::FSM<EnterLeaveBaseState>& fsm )
-			: BaseState( name, fsm )
+	EnterLeaveBaseState( const std::string& name )
+			: BaseState( name )
 	{}
 
 };

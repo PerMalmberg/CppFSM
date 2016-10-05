@@ -4,12 +4,7 @@
 
 #pragma once
 
-#include "EnterLeaveBaseState.h"
-
-class FinalState : public EnterLeaveBaseState
+class GoToCEvent
 {
-public:
-	FinalState();
 
 };
-

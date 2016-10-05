@@ -10,7 +10,7 @@
 class InitialState : public EnterLeaveBaseState
 {
 public:
-	InitialState( fsm::FSM<EnterLeaveBaseState> &fsm ) : EnterLeaveBaseState( "InitialState", fsm )
+	InitialState() : EnterLeaveBaseState( "InitialState" )
 	{
 
 	}

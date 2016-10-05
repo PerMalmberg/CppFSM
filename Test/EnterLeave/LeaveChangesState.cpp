@@ -5,11 +5,11 @@
 #include "LeaveChangesState.h"
 #include "FinalState.h"
 
-LeaveChangesState::LeaveChangesState( fsm::FSM<EnterLeaveBaseState>& fsm )
-		: EnterLeaveBaseState( "LeaveChangesState", fsm ), leaveChain( *this )
+LeaveChangesState::LeaveChangesState()
+		: EnterLeaveBaseState( "LeaveChangesState" ), leaveChain( *this )
 {}
 
 void LeaveChangesState::Leave()
 {
-	myFsm.SetState( std::make_unique<FinalState>( myFsm ) );
+	GetFSM().SetState( std::make_unique<FinalState>() );
 }

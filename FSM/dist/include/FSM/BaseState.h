@@ -16,7 +16,7 @@ public:
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	BaseState( const std::string name, FSM <FSMBaseState>& fsm ) : myFsm( fsm ), myName( name )
+	BaseState( const std::string name ) : myName( name )
 	{}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,10 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////
 	virtual ~BaseState()
-	{}
+	{
+		// Explicitly set this to null to show that it should not be deleted.
+		myFsm = nullptr;
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -76,16 +79,28 @@ public:
 	{
 		// Note: States are volatile so prefer to return a copy instead of
 		// of a const reference because that may cause dangling references
-		// at the callee.
+		// at the call site.
 		return myName;
 	}
 
 protected:
-	FSM <FSMBaseState>& myFsm;
 	const std::string myName;
+
+	fsm::FSM<FSMBaseState>& GetFSM() { return *myFsm; }
+
 private:
+	void SetState( std::unique_ptr<FSMBaseState> newState )
+	{
+		myFsm->SetState( newState );
+	}
+
 	std::vector<IEnterChain*> myEnterChain;
 	std::deque<ILeaveChain*> myLeaveChain;
+
+	// Only ever called by the FSM when activating a new state
+	void SetFSM( fsm::FSM<FSMBaseState>* fsm ) { myFsm = fsm; }
+	fsm::FSM<FSMBaseState>* myFsm;
+	friend class FSM<FSMBaseState>;
 };
 
 }

@@ -9,7 +9,7 @@
 class LeaveChangesState : public EnterLeaveBaseState
 {
 public:
-	LeaveChangesState( fsm::FSM<EnterLeaveBaseState>& fsm );
+	LeaveChangesState();
 
 	SetupLeaveChain( LeaveChangesState );
 

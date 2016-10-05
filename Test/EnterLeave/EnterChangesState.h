@@ -10,7 +10,7 @@
 class EnterChangesState : public EnterLeaveBaseState
 {
 public:
-	EnterChangesState( fsm::FSM<EnterLeaveBaseState>& fsm );
+	EnterChangesState();
 
 	SetupEnterChain( EnterChangesState );
 

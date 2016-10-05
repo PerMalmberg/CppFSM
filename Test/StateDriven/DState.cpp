@@ -2,7 +2,9 @@
 // Licensed under MIT, see LICENSE file.
 // Give credit where credit is due.
 
-#include "FinalState.h"
+#include "DState.h"
 
-FinalState::FinalState() : EnterLeaveBaseState( "FinalState" )
-{}
+DState::DState( EventCounter& counter )
+		: StateDrivenBaseState( "D", counter )
+{
+}

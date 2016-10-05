@@ -5,8 +5,8 @@
 #include "StateListeningToEvents.h"
 #include "FinalEventState.h"
 
-StateListeningToEvents::StateListeningToEvents( fsm::FSM<EventBaseState>& fsm, EventCounter& count )
-		: EventBaseState( "StateListeningToEvents", fsm ), myCount( count )
+StateListeningToEvents::StateListeningToEvents( EventCounter& count )
+		: EventBaseState( "StateListeningToEvents" ), myCount( count )
 {
 }
 
@@ -22,5 +22,5 @@ void StateListeningToEvents::Event( std::unique_ptr<SubtractEvent> event )
 
 void StateListeningToEvents::Event( std::unique_ptr<ChangeStateEvent> event )
 {
-	myFsm.SetState( std::make_unique<FinalEventState>( myFsm ) );
+	GetFSM().SetState( std::make_unique<FinalEventState>() );
 }

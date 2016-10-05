@@ -12,32 +12,20 @@
 #include "EnterLeave/EnterLeaveDerived.h"
 #include "Event/StateListeningToEvents.h"
 #include "EnterLeave/EnterChangesState.h"
-#include "EnterLeave/LeaveChangesState.h"
 #include "FsmTestLogger.h"
+#include "EnterLeave/LeaveChangesState.h"
+#include "StateDriven/StateDrivenBaseState.h"
+#include "StateDriven/AState.h"
 
 SCENARIO( "Basic FSM" )
 {
 	GIVEN( "A clean slate" )
 	{
+		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<InitialState>(), std::make_shared<FsmTestLogger>() };
 
-		fsm::FSM<EnterLeaveBaseState> fsm;
-		fsm.SetLogger( std::make_shared<FsmTestLogger>() );
-
-		WHEN( "FSM is created" )
+		THEN( "Has state" )
 		{
-			THEN( "Has no state" )
-			{
-				REQUIRE( fsm.GetStateName() == "" );
-			}
-		}
-		AND_WHEN( "State is set" )
-		{
-			fsm.SetState( std::make_unique<InitialState>( fsm ) );
-
-			THEN( "Has state" )
-			{
-				REQUIRE( fsm.GetStateName() == "InitialState" );
-			}
+			REQUIRE( fsm.GetStateName() == "InitialState" );
 		}
 	}
 }
@@ -46,33 +34,18 @@ SCENARIO( "Enter leave order" )
 {
 	GIVEN( "A clean slate" )
 	{
-		fsm::FSM<EnterLeaveBaseState> fsm;
-		fsm.SetLogger( std::make_shared<FsmTestLogger>() );
+		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<InitialState>(), std::make_shared<FsmTestLogger>() };
 
-		WHEN( "FSM is created" )
-		{
-			THEN( "Has no state" )
-			{
-				REQUIRE( fsm.GetStateName() == "" );
-			}
-		}
-		AND_WHEN( "State is set" )
-		{
-			fsm.SetState( std::make_unique<InitialState>( fsm ) );
-
-			THEN( "Has state" )
-			{
-				REQUIRE( fsm.GetStateName() == "InitialState" );
-			}
-		}
-		AND_WHEN( "New state is set, enter and leave is called in correct order" )
+		WHEN( "New state is set, enter and leave is called in correct order" )
 		{
 			EnterLeaveTestData d;
-			fsm.SetState( std::make_unique<EnterLeaveDerived>( d, fsm ) );
+			fsm.SetState( std::make_unique<EnterLeaveDerived>( d ) );
+
 			REQUIRE( d.count == 2 );
 			REQUIRE( fsm.GetStateName() == "EnterLeaveDerived" );
 
-			fsm.SetState( std::make_unique<InitialState>( fsm ) );
+			fsm.SetState( std::make_unique<InitialState>() );
+
 			REQUIRE( d.count == 0 );
 			REQUIRE( fsm.GetStateName() == "InitialState" );
 		}
@@ -83,11 +56,10 @@ SCENARIO( "Enter method causes state change" )
 {
 	GIVEN( "An FSM" )
 	{
-		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_shared<FsmTestLogger>() };
-
 		WHEN( "First state is set, it changes state in the Enter method" )
 		{
-			fsm.SetState( std::make_unique<EnterChangesState>( fsm ) );
+			fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<EnterChangesState>(),
+			                                   std::make_shared<FsmTestLogger>() };
 
 			THEN( "Verify that the state has changed exactly two times - initial and new state" )
 			{
@@ -102,16 +74,15 @@ SCENARIO( "Leave method causes state change" )
 {
 	GIVEN( "An FSM with a state that changes state on Leave()" )
 	{
-		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_shared<FsmTestLogger>() };
+		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<LeaveChangesState>(), std::make_shared<FsmTestLogger>() };
 		EnterLeaveTestData d;
 
-		fsm.SetState( std::make_unique<LeaveChangesState>( fsm ) );
 		REQUIRE( fsm.GetStateChangeCounter() == 1 );
 		REQUIRE( fsm.GetStateName() == "LeaveChangesState" );
 
 		WHEN( "Attempt to set new state" )
 		{
-			fsm.SetState( std::make_unique<EnterLeaveDerived>( d, fsm ) );
+			fsm.SetState( std::make_unique<EnterLeaveDerived>( d ) );
 
 			THEN( "The desired state is replaced with the state set in the Leave() method" )
 			{
@@ -122,14 +93,14 @@ SCENARIO( "Leave method causes state change" )
 	}
 }
 
-
 SCENARIO( "Send an event, have state react to it" )
 {
 	GIVEN( "An FSM with an initial state" )
 	{
-		fsm::FSM<EventBaseState> fsm{ std::make_shared<FsmTestLogger>() };
 		EventCounter count;
-		fsm.SetState( std::make_unique<StateListeningToEvents>( fsm, count ) );
+		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( count ),
+		                              std::make_shared<FsmTestLogger>() };
+
 		REQUIRE( fsm.GetStateName() == "StateListeningToEvents" );
 
 		WHEN( "An event is sent to the FSM" )
@@ -153,9 +124,10 @@ SCENARIO( "Event causes state change" )
 {
 	GIVEN( "An FSM with an initial state" )
 	{
-		fsm::FSM<EventBaseState> fsm{ std::make_shared<FsmTestLogger>() };
 		EventCounter count;
-		fsm.SetState( std::make_unique<StateListeningToEvents>( fsm, count ) );
+		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( count ),
+		                              std::make_shared<FsmTestLogger>() };
+
 		REQUIRE( fsm.GetStateName() == "StateListeningToEvents" );
 
 		WHEN( "An event is sent to the FSM, asking to change state" )
@@ -169,4 +141,26 @@ SCENARIO( "Event causes state change" )
 	}
 }
 
+SCENARIO( "FSM is state driven" )
+{
+	GIVEN( "An FSM with initial state" )
+	{
+		EventCounter c{};
+		fsm::FSM<StateDrivenBaseState> fsm{ std::make_unique<AState>( c ), std::make_shared<FsmTestLogger>() };
+		REQUIRE( c.count == 2 );
 
+		/*
+		 * A, sends GoToBEvent ->
+		 *      B, sends GoToCEvent ->
+		 *          C, sets state ->
+		 *              D, if( count > 5 ) {
+		 *                  Stop();
+		 *              }
+		 *              else {
+		 *                  set state A
+		 *              }
+		 *
+		 * */
+
+	}
+}
