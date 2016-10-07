@@ -34,6 +34,7 @@ template<typename FSMBaseState>
 class FSM
 {
 public:
+	typedef std::queue<std::unique_ptr<fsm::EventBase<FSMBaseState>>> EventQueue;
 	///////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -80,35 +81,8 @@ public:
 		return HasState() ? myCurrent->GetName() : "";
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	//
-	// Sends an event to the current state.
-	//
-	// Returns a State telling if the event caused a state change.
-	// NOTE: If the state changed, this means that the previous state has been
-	// destroyed and the callee must not access anything outside its current
-	// stack frame (i.e. member variables).
-	///////////////////////////////////////////////////////////////////////////
-	//template<typename EventType>
-	//State Event( std::unique_ptr<EventType> event )
-	//{
-	//	auto startCount = myStateChangeCounter;
-	//
-	//	if( HasState() )
-	//	{
-	//		// Are you getting an ambiguous call error?
-	//		// Here is likely why:
-	//		// A 'using EventReceiver<EventType>::Event;' or an implementation of the Event<T>()
-	//		// method (possibly pure virtual) for each event type must be added to the first class in the
-	//		// inheritance chain from BaseState because inherited methods are not part of the overload lookup.
-	//		// SO question specific to this implementation: http://stackoverflow.com/questions/39845205/template-instantiation-ambiguity
-	//		myCurrent->Event( std::move( event ) );
-	//	}
-	//
-	//	// If the event triggered a state change, make sure to tell the callee that.
-	//	return startCount == myStateChangeCounter ? STABLE : CHANGED;
-	//}
 
+	// This method must be called continuously by the application to keep the FSM alive.
 	virtual void Tick()
 	{
 		if( HasState() )
@@ -116,7 +90,7 @@ public:
 			if( myEvents.size() > 0 ) {
 				auto event = std::move( myEvents.front() );
 				myEvents.pop();
-				//event->Execute( myCurrent );
+				event->Execute( myCurrent );
 			}
 			else
 			{
@@ -125,8 +99,8 @@ public:
 		}
 	}
 
-
-	void SendEvent( std::unique_ptr<fsm::EventBase> event )
+	// Enqueues an event for processing on the next tick
+	void EnqueueEvent( std::unique_ptr<fsm::EventBase<FSMBaseState>> event )
 	{
 		myEvents.push( std::move( event ) );
 	}
@@ -140,6 +114,7 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	void SetState( std::unique_ptr<FSMBaseState> newState )
 	{
+		// Save a value for alter comparison, see note about Leave() below.
 		auto changeCount = myStateChangeCounter;
 
 		if( myCurrent )
@@ -147,21 +122,37 @@ public:
 			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
 			// If this happens, it means that the state overrides any other exist paths.
 
-			// Take local ownership of the current state to prevent further actions on this state.
+			// Take local ownership of the current state to prevent further
+			// actions on this state. (Reason: see note about Leave() below.
 			auto state = std::move( myCurrent );
 			myLogger->LeavingState( state->GetName() );
 			state->DoLeave();
 		}
 
 		// Only set the new state if no state change already has happened prior to this point.
-		// For example, a state may change state in its Enter() or Leave() chain. In these cases
+		// For example, a state may change state in its Leave() chain. In these cases
 		// we only want the last state in the chain to be set.
 		if( changeCount == myStateChangeCounter )
 		{
-			myCurrent = std::move( newState );
+			// Clear any waiting events when changing states.
+			// NOTE: If you are considering changing this behaviour you're doing it wrong - what you
+			// should do is to initialize your new state with what it needs in its constructor.
+			while( !myEvents.empty() ) {
+				myEvents.pop();
+			}
+
+			// From unique to shared pointer.
+			auto s = newState.release();
+			myCurrent = std::shared_ptr<FSMBaseState>( s );
+
+			// Initialize the new state
 			myCurrent->SetFSM( this );
+
+			// And perform the Enter procedure
 			myLogger->EnteringState( myCurrent->GetName() );
 			myCurrent->DoEnter();
+
+			// Signal that a new state has been set.
 			myStateChangeCounter++;
 		}
 	}
@@ -176,10 +167,11 @@ private:
 		return myCurrent != nullptr;
 	}
 
-	std::unique_ptr<FSMBaseState> myCurrent;
+	std::shared_ptr<FSMBaseState> myCurrent;
 	int32_t myStateChangeCounter = 0;
 	std::shared_ptr<IFsmLogger> myLogger;
-	std::queue<std::unique_ptr<fsm::EventBase>> myEvents;
+
+	EventQueue myEvents;
 };
 
 }

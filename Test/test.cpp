@@ -14,6 +14,8 @@
 #include "EnterLeave/LeaveChangesState.h"
 #include "Event/EventBaseState.h"
 #include "Event/StateListeningToEvents.h"
+#include "Event/StateThatSendsEventOnTick.h"
+#include "Event/Events/CountDownOnDestruction.h"
 
 SCENARIO( "Basic FSM" )
 {
@@ -103,12 +105,43 @@ SCENARIO( "Send an event, have state react to it" )
 
 		WHEN( "State sends an event to itself" )
 		{
-			fsm.Tick();
+			fsm.Tick(); // First for sending the event
+			fsm.Tick(); // Second for processing the event
 
 			THEN( "The event is forwarded to the current state" )
 			{
 				REQUIRE( c.Get() == 1 );
 			}
+		}
+		AND_WHEN( "Events are available and the state changes" )
+		{
+
+		}
+	}
+}
+
+SCENARIO( "When there are multiple events waiting and the state changes, the events are destroyed" )
+{
+	GIVEN( "An FSM with an initial state" )
+	{
+		Counter c;
+		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateThatSendsEventOnTick>( c ),
+		                              std::make_shared<FsmTestLogger>() };
+
+		REQUIRE( fsm.GetStateName() == "StateThatSendsEventOnTick" );
+
+		WHEN( "An event is queued and state changes" )
+		{
+			fsm.Tick();
+
+			THEN( "The event is destroyed when removed from the queue" )
+			{
+				REQUIRE( fsm.GetStateName() == "StateThatSendsEventOnTick" );
+				REQUIRE( c.Get() == -2 );
+			}
+		}
+		AND_WHEN( "Events are available and the state changes" )
+		{
 
 		}
 	}

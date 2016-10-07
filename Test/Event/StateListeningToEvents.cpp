@@ -12,8 +12,7 @@ StateListeningToEvents::StateListeningToEvents( Counter& c )
 
 void StateListeningToEvents::Tick()
 {
-	EventA a;
-	GetFSM().SendEvent( std::make_unique<EventA>() );
+	GetFSM().EnqueueEvent( std::make_unique<EventA>() );
 }
 
 void StateListeningToEvents::Event( EventA& event )

@@ -41,6 +41,6 @@ set(SOURCE_FILES
         EnterLeave/FinalState.h
         FsmTestLogger.cpp
         FsmTestLogger.h
-        Event/EventBaseState.cpp Event/EventBaseState.h Event/StateListeningToEvents.cpp Event/StateListeningToEvents.h Event/Events/EventA.h Event/Counter.h ../FSM/dist/include/FSM/EventBase.h)
+        Event/EventBaseState.cpp Event/EventBaseState.h Event/StateListeningToEvents.cpp Event/StateListeningToEvents.h Event/Events/EventA.h Event/Counter.h ../FSM/dist/include/FSM/EventBase.h Event/StateThatSendsEventOnTick.cpp Event/StateThatSendsEventOnTick.h Event/Events/CountDownOnDestruction.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

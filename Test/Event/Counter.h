@@ -12,6 +12,11 @@ public:
 		++myCount;
 	}
 
+	void Dec()
+	{
+		--myCount;
+	}
+
 	int Get()
 	{
 		return myCount;

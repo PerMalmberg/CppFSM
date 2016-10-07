@@ -8,13 +8,20 @@
 
 class EventA;
 
+class CountDownOnDestruction;
+
 class EventBaseState
 		: public fsm::BaseState<EventBaseState>,
-		  public fsm::EventReceiver<EventA>
+		  public fsm::EventReceiver<EventA>,
+		  public fsm::EventReceiver<CountDownOnDestruction>
 {
 public:
 	EventBaseState( const std::string& name );
 
-	virtual void Event( EventA& event ) = 0;
+	virtual void Event( EventA& event )
+	{}
+
+	virtual void Event( CountDownOnDestruction& event )
+	{}
 
 };

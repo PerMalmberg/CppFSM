@@ -6,14 +6,26 @@
 
 #include <FSM/EventBase.h>
 #include "../EventBaseState.h"
+#include "../Counter.h"
 
-class EventA : public fsm::EventBase<EventBaseState>
+class CountDownOnDestruction : public fsm::EventBase<EventBaseState>
 {
 
 public:
+	CountDownOnDestruction( Counter& c ) : myCounter(c)
+	{
+	}
+
+	virtual ~CountDownOnDestruction()
+	{
+		myCounter.Dec();
+	}
+
 	void Execute( std::shared_ptr<EventBaseState> state ) override
 	{
 		state->Event( *this );
 	}
 
+private:
+	Counter& myCounter;
 };

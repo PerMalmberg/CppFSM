@@ -6,10 +6,13 @@
 
 namespace fsm {
 
+template <typename FSMBaseState>
 class EventBase
 {
 public:
-	virtual void Execute() = 0;
+	virtual ~EventBase() {}
+
+	virtual void Execute( std::shared_ptr<FSMBaseState> state ) = 0;
 };
 
 }
