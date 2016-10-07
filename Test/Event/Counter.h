@@ -4,14 +4,19 @@
 
 #pragma once
 
-class AddEvent
+class Counter
 {
-};
+public:
+	void Inc()
+	{
+		++myCount;
+	}
 
-class SubtractEvent
-{
-};
+	int Get()
+	{
+		return myCount;
+	}
 
-class ChangeStateEvent
-{
+private:
+	int myCount = 0;
 };

@@ -21,10 +21,9 @@
       <sourceFolder url="file://$MODULE_DIR$/Test/test.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventBaseState.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/Event/FinalEventState.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/Event/FinalEventState.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventCounter.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Events.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventBaseState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Counter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Events/EventA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test/FsmTestLogger.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/BaseState.h" isTestSource="false" />
@@ -33,6 +32,7 @@
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/IFsmLogger.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/FSM.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/LeaveChain.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/EventBase.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/NullLogger.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/State.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />

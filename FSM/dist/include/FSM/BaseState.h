@@ -88,6 +88,14 @@ protected:
 
 	fsm::FSM<FSMBaseState>& GetFSM() { return *myFsm; }
 
+	// Called by the FSM to keep the FSM alive.
+	// This is intentionally places as protected to
+	// allow subclasses to call it, but to prevent other doing the same.
+	virtual void Tick()
+	{
+		// Do nothing by default
+	}
+
 private:
 	void SetState( std::unique_ptr<FSMBaseState> newState )
 	{

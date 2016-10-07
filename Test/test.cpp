@@ -6,14 +6,14 @@
 
 #include "Catch/include/catch.hpp"
 #include "FSM/FSM.h"
-#include "Event/Events.h"
 #include "EnterLeave/InitialState.h"
 #include "EnterLeave/EnterLeaveTestData.h"
 #include "EnterLeave/EnterLeaveDerived.h"
-#include "Event/StateListeningToEvents.h"
 #include "EnterLeave/EnterChangesState.h"
 #include "FsmTestLogger.h"
 #include "EnterLeave/LeaveChangesState.h"
+#include "Event/EventBaseState.h"
+#include "Event/StateListeningToEvents.h"
 
 SCENARIO( "Basic FSM" )
 {
@@ -95,47 +95,21 @@ SCENARIO( "Send an event, have state react to it" )
 {
 	GIVEN( "An FSM with an initial state" )
 	{
-		EventCounter count;
-		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( count ),
+		Counter c;
+		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( c ),
 		                              std::make_shared<FsmTestLogger>() };
 
 		REQUIRE( fsm.GetStateName() == "StateListeningToEvents" );
 
-		WHEN( "An event is sent to the FSM" )
+		WHEN( "State sends an event to itself" )
 		{
-			fsm.Event( std::make_unique<AddEvent>() );
+			fsm.Tick();
 
 			THEN( "The event is forwarded to the current state" )
 			{
-				REQUIRE( count.count == 1 );
+				REQUIRE( c.Get() == 1 );
 			}
-			AND_THEN( "Another event is sent" )
-			{
-				fsm.Event( std::make_unique<SubtractEvent>() );
-				REQUIRE( count.count == 0 );
-			}
+
 		}
 	}
 }
-
-SCENARIO( "Event causes state change" )
-{
-	GIVEN( "An FSM with an initial state" )
-	{
-		EventCounter count;
-		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( count ),
-		                              std::make_shared<FsmTestLogger>() };
-
-		REQUIRE( fsm.GetStateName() == "StateListeningToEvents" );
-
-		WHEN( "An event is sent to the FSM, asking to change state" )
-		{
-			THEN( "The event is forwarded to the current state" )
-			{
-				REQUIRE( fsm::CHANGED == fsm.Event( std::make_unique<ChangeStateEvent>() ) );
-				REQUIRE( fsm.GetStateName() == "FinalEventState" );
-			}
-		}
-	}
-}
-

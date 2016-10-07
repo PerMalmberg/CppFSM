@@ -4,8 +4,15 @@
 
 #pragma once
 
-class EventCounter
+#include <FSM/EventBase.h>
+
+class EventA : public fsm::EventBase
 {
+
 public:
-	int count = 0;
+	void Execute() override
+	{
+
+	}
+
 };

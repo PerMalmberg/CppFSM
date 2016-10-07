@@ -3,24 +3,20 @@
 // Give credit where credit is due.
 
 #include "StateListeningToEvents.h"
-#include "FinalEventState.h"
+#include "Events/EventA.h"
 
-StateListeningToEvents::StateListeningToEvents( EventCounter& count )
-		: EventBaseState( "StateListeningToEvents" ), myCount( count )
+StateListeningToEvents::StateListeningToEvents( Counter& c )
+		: EventBaseState( "StateListeningToEvents" ),
+		  myCounter( c )
+{}
+
+void StateListeningToEvents::Tick()
 {
+	EventA a;
+	GetFSM().SendEvent( std::make_unique<EventA>() );
 }
 
-void StateListeningToEvents::Event( std::unique_ptr<AddEvent> event )
+void StateListeningToEvents::Event( EventA& event )
 {
-	myCount.count++;
-}
-
-void StateListeningToEvents::Event( std::unique_ptr<SubtractEvent> event )
-{
-	myCount.count--;
-}
-
-void StateListeningToEvents::Event( std::unique_ptr<ChangeStateEvent> event )
-{
-	GetFSM().SetState( std::make_unique<FinalEventState>() );
+	myCounter.Inc();
 }

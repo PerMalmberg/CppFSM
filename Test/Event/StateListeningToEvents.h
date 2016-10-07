@@ -4,23 +4,19 @@
 
 #pragma once
 
-
-#include <FSM/FSM.h>
-#include <FSM/EventReceiver.h>
 #include "EventBaseState.h"
-#include "Events.h"
-#include "EventCounter.h"
+#include "Counter.h"
 
 class StateListeningToEvents : public EventBaseState
 {
 public:
-	StateListeningToEvents( EventCounter& count );
+	StateListeningToEvents(Counter &c);
 
-	void Event( std::unique_ptr<AddEvent> event ) override;
-	void Event( std::unique_ptr<SubtractEvent> event ) override;
-	void Event( std::unique_ptr<ChangeStateEvent> event ) override;
+	void Event( EventA& event ) override ;
+
+protected:
+	void Tick() override;
 
 private:
-	EventCounter& myCount;
+	Counter &myCounter;
 };
-

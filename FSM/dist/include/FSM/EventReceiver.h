@@ -4,16 +4,13 @@
 
 #pragma once
 
-#include <memory>
-#include "State.h"
-
 namespace fsm {
 
-template<typename EventType>
+template <typename EventType>
 class EventReceiver
 {
 public:
-	virtual void Event( std::unique_ptr<EventType> event ) = 0;
+	virtual void Event( EventType& event ) = 0;
 };
 
 }

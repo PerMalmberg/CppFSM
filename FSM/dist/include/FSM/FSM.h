@@ -8,11 +8,13 @@
 #include <memory>
 #include <vector>
 #include <deque>
+#include <queue>
 #include "EnterChain.h"
 #include "LeaveChain.h"
 #include "EventReceiver.h"
 #include "IFsmLogger.h"
 #include "NullLogger.h"
+#include "EventBase.h"
 
 namespace fsm {
 
@@ -46,7 +48,7 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////
 	FSM( std::unique_ptr<FSMBaseState> initialState, std::shared_ptr<IFsmLogger> logger )
-			: myLogger( logger )
+			: myLogger( logger ), myEvents()
 	{
 		SetState( std::move( initialState ) );
 	}
@@ -87,24 +89,46 @@ public:
 	// destroyed and the callee must not access anything outside its current
 	// stack frame (i.e. member variables).
 	///////////////////////////////////////////////////////////////////////////
-	template<typename EventType>
-	State Event( std::unique_ptr<EventType> event )
-	{
-		auto startCount = myStateChangeCounter;
+	//template<typename EventType>
+	//State Event( std::unique_ptr<EventType> event )
+	//{
+	//	auto startCount = myStateChangeCounter;
+	//
+	//	if( HasState() )
+	//	{
+	//		// Are you getting an ambiguous call error?
+	//		// Here is likely why:
+	//		// A 'using EventReceiver<EventType>::Event;' or an implementation of the Event<T>()
+	//		// method (possibly pure virtual) for each event type must be added to the first class in the
+	//		// inheritance chain from BaseState because inherited methods are not part of the overload lookup.
+	//		// SO question specific to this implementation: http://stackoverflow.com/questions/39845205/template-instantiation-ambiguity
+	//		myCurrent->Event( std::move( event ) );
+	//	}
+	//
+	//	// If the event triggered a state change, make sure to tell the callee that.
+	//	return startCount == myStateChangeCounter ? STABLE : CHANGED;
+	//}
 
+	virtual void Tick()
+	{
 		if( HasState() )
 		{
-			// Are you getting an ambiguous call error?
-			// Here is likely why:
-			// A 'using EventReceiver<EventType>::Event;' or an implementation of the Event<T>()
-			// method (possibly pure virtual) for each event type must be added to the first class in the
-			// inheritance chain from BaseState because inherited methods are not part of the overload lookup.
-			// SO question specific to this implementation: http://stackoverflow.com/questions/39845205/template-instantiation-ambiguity
-			myCurrent->Event( std::move( event ) );
+			if( myEvents.size() > 0 ) {
+				auto event = std::move( myEvents.front() );
+				myEvents.pop();
+				//event->Execute( myCurrent );
+			}
+			else
+			{
+				myCurrent->Tick();
+			}
 		}
+	}
 
-		// If the event triggered a state change, make sure to tell the callee that.
-		return startCount == myStateChangeCounter ? STABLE : CHANGED;
+
+	void SendEvent( std::unique_ptr<fsm::EventBase> event )
+	{
+		myEvents.push( std::move( event ) );
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -152,10 +176,10 @@ private:
 		return myCurrent != nullptr;
 	}
 
-
 	std::unique_ptr<FSMBaseState> myCurrent;
 	int32_t myStateChangeCounter = 0;
 	std::shared_ptr<IFsmLogger> myLogger;
+	std::queue<std::unique_ptr<fsm::EventBase>> myEvents;
 };
 
 }

@@ -2,7 +2,14 @@
 // Licensed under MIT, see LICENSE file.
 // Give credit where credit is due.
 
-#include "FinalEventState.h"
+#pragma once
 
-FinalEventState::FinalEventState() : EventBaseState( "FinalEventState" )
-{}
+namespace fsm {
+
+class EventBase
+{
+public:
+	virtual void Execute() = 0;
+};
+
+}

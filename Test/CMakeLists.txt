@@ -35,19 +35,12 @@ set(SOURCE_FILES
         EnterLeave/EnterLeaveBaseState.h
         EnterLeave/LeaveChangesState.cpp
         EnterLeave/LeaveChangesState.h
-        Event/StateListeningToEvents.cpp
-        Event/StateListeningToEvents.h
-        Event/EventBaseState.h
-        Event/EventCounter.h
-        Event/Events.h
         EnterLeave/EnterChangesState.cpp
         EnterLeave/EnterChangesState.h
         EnterLeave/FinalState.cpp
         EnterLeave/FinalState.h
         FsmTestLogger.cpp
         FsmTestLogger.h
-        Event/FinalEventState.cpp
-        Event/FinalEventState.h
-        )
+        Event/EventBaseState.cpp Event/EventBaseState.h Event/StateListeningToEvents.cpp Event/StateListeningToEvents.h Event/Events/EventA.h Event/Counter.h ../FSM/dist/include/FSM/EventBase.h)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
