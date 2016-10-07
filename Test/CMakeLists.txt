@@ -48,17 +48,6 @@ set(SOURCE_FILES
         FsmTestLogger.h
         Event/FinalEventState.cpp
         Event/FinalEventState.h
-        StateDriven/StateDrivenBaseState.cpp
-        StateDriven/StateDrivenBaseState.h
-        StateDriven/AState.cpp
-        StateDriven/AState.h
-        StateDriven/BState.cpp
-        StateDriven/BState.h
-        StateDriven/CState.cpp
-        StateDriven/CState.h
-        StateDriven/DState.cpp
-        StateDriven/DState.h
-        StateDriven/Events/GoToBEvent.h
-        StateDriven/Events/GoToCEvent.h)
+        )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

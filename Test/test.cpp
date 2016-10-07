@@ -14,8 +14,6 @@
 #include "EnterLeave/EnterChangesState.h"
 #include "FsmTestLogger.h"
 #include "EnterLeave/LeaveChangesState.h"
-#include "StateDriven/StateDrivenBaseState.h"
-#include "StateDriven/AState.h"
 
 SCENARIO( "Basic FSM" )
 {
@@ -141,26 +139,3 @@ SCENARIO( "Event causes state change" )
 	}
 }
 
-SCENARIO( "FSM is state driven" )
-{
-	GIVEN( "An FSM with initial state" )
-	{
-		EventCounter c{};
-		fsm::FSM<StateDrivenBaseState> fsm{ std::make_unique<AState>( c ), std::make_shared<FsmTestLogger>() };
-		REQUIRE( c.count == 2 );
-
-		/*
-		 * A, sends GoToBEvent ->
-		 *      B, sends GoToCEvent ->
-		 *          C, sets state ->
-		 *              D, if( count > 5 ) {
-		 *                  Stop();
-		 *              }
-		 *              else {
-		 *                  set state A
-		 *              }
-		 *
-		 * */
-
-	}
-}
