@@ -140,9 +140,5 @@ SCENARIO( "When there are multiple events waiting and the state changes, the eve
 				REQUIRE( c.Get() == -2 );
 			}
 		}
-		AND_WHEN( "Events are available and the state changes" )
-		{
-
-		}
 	}
 }
