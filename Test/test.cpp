@@ -15,7 +15,6 @@
 #include "Event/EventBaseState.h"
 #include "Event/StateListeningToEvents.h"
 #include "Event/StateThatSendsEventOnTick.h"
-#include "Event/Events/CountDownOnDestruction.h"
 
 SCENARIO( "Basic FSM" )
 {
