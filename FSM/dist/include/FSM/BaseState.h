@@ -86,28 +86,28 @@ public:
 protected:
 	const std::string myName;
 
+	// Gets the FSM.
+	// Note: Although apparent by how new states are constructed without a reference to an FSM, this method will
+	// return nullptr during construction of the state, so not call it until after construction, i.e. at the earliest
+	// in the Enter() chain.
 	fsm::FSM<FSMBaseState>& GetFSM() { return *myFsm; }
 
-	// Called by the FSM to keep the FSM alive.
-	// This is intentionally places as protected to
-	// allow subclasses to call it, but to prevent others doing the same.
+	// Called by the FSM to keep the state alive.
+	// This is intentionally placed as protected to
+	// allow subclasses to call it but prevent others doing the same.
 	virtual void Tick()
 	{
 		// Do nothing by default
 	}
 
 private:
-	void SetState( std::unique_ptr<FSMBaseState> newState )
-	{
-		myFsm->SetState( newState );
-	}
 
 	std::vector<IEnterChain*> myEnterChain;
 	std::deque<ILeaveChain*> myLeaveChain;
 
 	// Only ever called by the FSM when activating a new state
 	void SetFSM( fsm::FSM<FSMBaseState>* fsm ) { myFsm = fsm; }
-	fsm::FSM<FSMBaseState>* myFsm;
+	fsm::FSM<FSMBaseState>* myFsm = nullptr;
 	friend class FSM<FSMBaseState>;
 };
 
