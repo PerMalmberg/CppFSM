@@ -42,7 +42,7 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////
 	explicit FSM( std::unique_ptr<FSMBaseState> initialState )
-			: FSM( initialState, std::make_shared<NullLogger>() )
+			: FSM( std::move( initialState ), std::make_shared<NullLogger>() )
 	{
 	}
 
@@ -90,28 +90,30 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	virtual bool Tick()
 	{
-		if( myStates.size() > 0 )
+		if( myContinueToRun )
 		{
-			auto state = std::move( myStates.front() );
-			myStates.pop();
-			ActivateState( std::move( state ) );
-		}
-
-		// Send events.
-		if( HasState() )
-		{
-			if( myEvents.size() > 0 )
+			if( myStates.size() > 0 )
 			{
-				auto event = std::move( myEvents.front() );
-				myEvents.pop();
-				event->Execute( myCurrent );
+				auto state = std::move( myStates.front() );
+				myStates.pop();
+				ActivateState( std::move( state ) );
 			}
-			else
+
+			// Send events.
+			if( HasState() )
 			{
-				myCurrent->Tick();
+				if( myEvents.size() > 0 )
+				{
+					auto event = std::move( myEvents.front() );
+					myEvents.pop();
+					event->Execute( myCurrent );
+				}
+				else
+				{
+					myCurrent->Tick();
+				}
 			}
 		}
-
 		return myContinueToRun;
 	}
 
@@ -152,6 +154,8 @@ public:
 	void Terminate()
 	{
 		myContinueToRun = false;
+		// When terminating, call the leave-chain for the current state.
+		ExecuteLeave();
 	}
 
 private:
@@ -162,17 +166,7 @@ private:
 	///////////////////////////////////////////////////////////////////////////
 	void ActivateState( std::unique_ptr<FSMBaseState> newState )
 	{
-		if( myCurrent )
-		{
-			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
-			// If this happens, it means that the state overrides any other exist paths.
-
-			// Take local ownership of the current state to prevent further
-			// actions on this state. (Reason: see note about Leave() below.
-			auto state = std::move( myCurrent );
-			myLogger->LeavingState( state->GetName() );
-			state->DoLeave();
-		}
+		ExecuteLeave();
 
 		// Clear any waiting events when changing states.
 		// NOTE: If you are considering changing this behaviour you're doing it wrong - what you
@@ -198,11 +192,21 @@ private:
 		myStateChangeCounter++;
 	}
 
+	void ExecuteLeave() const
+	{
+		if( HasState() )
+		{
+			auto state = move( myCurrent );
+			myLogger->LeavingState( state->GetName() );
+			state->DoLeave();
+		}
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	bool HasState()
+	bool HasState() const
 	{
 		return myCurrent != nullptr;
 	}

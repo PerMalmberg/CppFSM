@@ -90,7 +90,7 @@ protected:
 
 	// Called by the FSM to keep the FSM alive.
 	// This is intentionally places as protected to
-	// allow subclasses to call it, but to prevent other doing the same.
+	// allow subclasses to call it, but to prevent others doing the same.
 	virtual void Tick()
 	{
 		// Do nothing by default

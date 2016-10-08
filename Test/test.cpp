@@ -15,6 +15,8 @@
 #include "Event/EventBaseState.h"
 #include "Event/StateListeningToEvents.h"
 #include "Event/StateThatSendsEventOnTick.h"
+#include "Event/EventFlow/FlowBase.h"
+#include "Event/EventFlow/InitialFlow.h"
 
 SCENARIO( "Basic FSM" )
 {
@@ -151,6 +153,25 @@ SCENARIO( "When there are multiple events waiting and the state changes, the eve
 			{
 				REQUIRE( fsm.GetStateName() == "StateThatSendsEventOnTick" );
 				REQUIRE( c.Get() == -2 );
+			}
+		}
+	}
+}
+
+SCENARIO( "Entirely event based " )
+{
+	GIVEN("An FSM with an initial state")
+	{
+		Counter c;
+		fsm::FSM<FlowBase> fsm { std::make_unique<InitialFlow>( c ) };
+
+		WHEN( "Run() is called")
+		{
+			fsm.Run();
+
+			THEN( "State and events are run to finish")
+			{
+				REQUIRE( c.Get() == 7 );
 			}
 		}
 	}

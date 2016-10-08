@@ -8,6 +8,7 @@
 
 class EventA;
 
+// Forward declare your events
 class CountDownOnDestruction;
 
 class EventBaseState
