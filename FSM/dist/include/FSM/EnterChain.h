@@ -21,7 +21,7 @@ public:
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	EnterChain( StateClass &state ) : myState( state )
+	explicit EnterChain( StateClass &state ) : myState( state )
 	{
 		myState.AddToEnterChain( this );
 	}

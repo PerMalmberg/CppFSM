@@ -35,11 +35,13 @@ class FSM
 {
 public:
 	typedef std::queue<std::unique_ptr<fsm::EventBase<FSMBaseState>>> EventQueue;
+	typedef std::queue<std::unique_ptr<FSMBaseState>> StateQueue;
+
 	///////////////////////////////////////////////////////////////////////////
 	//
 	//
 	///////////////////////////////////////////////////////////////////////////
-	FSM( std::unique_ptr<FSMBaseState> initialState )
+	explicit FSM( std::unique_ptr<FSMBaseState> initialState )
 			: FSM( initialState, std::make_shared<NullLogger>() )
 	{
 	}
@@ -49,9 +51,9 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////
 	FSM( std::unique_ptr<FSMBaseState> initialState, std::shared_ptr<IFsmLogger> logger )
-			: myLogger( logger ), myEvents()
+			: myLogger( logger ), myEvents(), myStates()
 	{
-		SetState( std::move( initialState ) );
+		myStates.push( std::move( initialState ) );
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -81,13 +83,25 @@ public:
 		return HasState() ? myCurrent->GetName() : "";
 	}
 
-
-	// This method must be called continuously by the application to keep the FSM alive.
-	virtual void Tick()
+	///////////////////////////////////////////////////////////////////////////
+	//
+	// Either call Run() or continuously call this method until it returns false
+	//
+	///////////////////////////////////////////////////////////////////////////
+	virtual bool Tick()
 	{
+		if( myStates.size() > 0 )
+		{
+			auto state = std::move( myStates.front() );
+			myStates.pop();
+			ActivateState( std::move( state ) );
+		}
+
+		// Send events.
 		if( HasState() )
 		{
-			if( myEvents.size() > 0 ) {
+			if( myEvents.size() > 0 )
+			{
 				auto event = std::move( myEvents.front() );
 				myEvents.pop();
 				event->Execute( myCurrent );
@@ -97,9 +111,26 @@ public:
 				myCurrent->Tick();
 			}
 		}
+
+		return myContinueToRun;
 	}
 
+	///////////////////////////////////////////////////////////////////////////
+	//
+	// Calls Tick() until a state has called the Terminate() method to terminate
+	// the state and event execution.
+	//
+	///////////////////////////////////////////////////////////////////////////
+	void Run()
+	{
+		while( Tick() ) {}
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	//
 	// Enqueues an event for processing on the next tick
+	//
+	///////////////////////////////////////////////////////////////////////////
 	void EnqueueEvent( std::unique_ptr<fsm::EventBase<FSMBaseState>> event )
 	{
 		myEvents.push( std::move( event ) );
@@ -107,16 +138,30 @@ public:
 
 	///////////////////////////////////////////////////////////////////////////
 	//
-	// This methods sets the current state.
-	// Only meant to be called from a class inheriting from FSMBaseState,
-	// i.e. not from outside a state.
 	//
 	///////////////////////////////////////////////////////////////////////////
 	void SetState( std::unique_ptr<FSMBaseState> newState )
 	{
-		// Save a value for alter comparison, see note about Leave() below.
-		auto changeCount = myStateChangeCounter;
+		myStates.push( std::move( newState ) );
+	}
 
+	///////////////////////////////////////////////////////////////////////////
+	//
+	//
+	///////////////////////////////////////////////////////////////////////////
+	void Terminate()
+	{
+		myContinueToRun = false;
+	}
+
+private:
+
+	///////////////////////////////////////////////////////////////////////////
+	//
+	//
+	///////////////////////////////////////////////////////////////////////////
+	void ActivateState( std::unique_ptr<FSMBaseState> newState )
+	{
 		if( myCurrent )
 		{
 			// It is possible, but a very weird use-case, that a state sets a new state in its Leave() method.
@@ -129,35 +174,30 @@ public:
 			state->DoLeave();
 		}
 
-		// Only set the new state if no state change already has happened prior to this point.
-		// For example, a state may change state in its Leave() chain. In these cases
-		// we only want the last state in the chain to be set.
-		if( changeCount == myStateChangeCounter )
+		// Clear any waiting events when changing states.
+		// NOTE: If you are considering changing this behaviour you're doing it wrong - what you
+		// should do is to initialize your new state with what it needs in its constructor.
+		while( !myEvents.empty() )
 		{
-			// Clear any waiting events when changing states.
-			// NOTE: If you are considering changing this behaviour you're doing it wrong - what you
-			// should do is to initialize your new state with what it needs in its constructor.
-			while( !myEvents.empty() ) {
-				myEvents.pop();
-			}
-
-			// From unique to shared pointer.
-			auto s = newState.release();
-			myCurrent = std::shared_ptr<FSMBaseState>( s );
-
-			// Initialize the new state
-			myCurrent->SetFSM( this );
-
-			// And perform the Enter procedure
-			myLogger->EnteringState( myCurrent->GetName() );
-			myCurrent->DoEnter();
-
-			// Signal that a new state has been set.
-			myStateChangeCounter++;
+			myEvents.pop();
 		}
+
+		// From unique to shared pointer.
+		auto s = newState.release();
+		myCurrent = std::shared_ptr<FSMBaseState>( s );
+		myLogger->ActivatingState( myCurrent->GetName() );
+
+		// Initialize the new state
+		myCurrent->SetFSM( this );
+
+		// And perform the Enter procedure
+		myLogger->EnteringState( myCurrent->GetName() );
+		myCurrent->DoEnter();
+
+		// Signal that a new state has been set.
+		myStateChangeCounter++;
 	}
 
-private:
 	///////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -172,6 +212,8 @@ private:
 	std::shared_ptr<IFsmLogger> myLogger;
 
 	EventQueue myEvents;
+	StateQueue myStates;
+	bool myContinueToRun = true;
 };
 
 }

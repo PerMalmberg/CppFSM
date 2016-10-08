@@ -22,7 +22,6 @@ set(SOURCE_FILES
         ../FSM/dist/include/FSM/LeaveChain.h
         ../FSM/dist/include/FSM/EventReceiver.h
         ../FSM/dist/include/FSM/FSM.h
-        ../FSM/dist/include/FSM/State.h
         ../FSM/dist/include/FSM/IFsmLogger.h
         ../FSM/dist/include/FSM/NullLogger.h
         test.cpp

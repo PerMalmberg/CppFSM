@@ -14,3 +14,8 @@ void FsmTestLogger::LeavingState( const std::string state )
 {
 	std::cout << "Leaving: " << state << "\r\n";
 }
+
+void FsmTestLogger::ActivatingState( const std::string state )
+{
+	std::cout << "Activating: " << state << "\r\n";
+}

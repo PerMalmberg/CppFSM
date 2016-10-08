@@ -15,7 +15,7 @@ void StateListeningToEvents::Tick()
 	GetFSM().EnqueueEvent( std::make_unique<EventA>() );
 }
 
-void StateListeningToEvents::Event( EventA& event )
+void StateListeningToEvents::Event( EventA& )
 {
 	myCounter.Inc();
 }

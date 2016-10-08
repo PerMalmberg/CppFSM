@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/externals/CMakeUtils/CMakeUtils.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventBaseState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Counter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateListeningToEvents.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateThatSendsEventOnTick.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/EventBaseState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Events/EventA.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/Events/CountDownOnDestruction.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/Event/StateThatSendsEventOnTick.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/test.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/FsmTestLogger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveTestData.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/FinalState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterChangesState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveDerived.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveDerived.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterChangesState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/LeaveChangesState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/FinalState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/EnterLeaveBaseState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/InitialState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/EnterLeave/LeaveChangesState.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Test/FsmTestLogger.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/EnterChain.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/EventBase.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/LeaveChain.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/NullLogger.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/FSM.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/BaseState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/EventReceiver.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FSM/dist/include/FSM/IFsmLogger.h" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.3.0/include-fixed" />
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.3.0/include" />
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.3.0/include-fixed" />
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/lib/gcc/x86_64-w64-mingw32/5.3.0/include" />
+          <root url="file://C:/Program Files/mingw-w64/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/x86_64-w64-mingw32/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

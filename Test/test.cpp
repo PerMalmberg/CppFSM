@@ -21,6 +21,7 @@ SCENARIO( "Basic FSM" )
 	GIVEN( "A clean slate" )
 	{
 		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<InitialState>(), std::make_shared<FsmTestLogger>() };
+		fsm.Tick();
 
 		THEN( "Has state" )
 		{
@@ -34,16 +35,19 @@ SCENARIO( "Enter leave order" )
 	GIVEN( "A clean slate" )
 	{
 		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<InitialState>(), std::make_shared<FsmTestLogger>() };
+		fsm.Tick();
 
 		WHEN( "New state is set, enter and leave is called in correct order" )
 		{
 			EnterLeaveTestData d;
 			fsm.SetState( std::make_unique<EnterLeaveDerived>( d ) );
+			fsm.Tick();
 
 			REQUIRE( d.count == 2 );
 			REQUIRE( fsm.GetStateName() == "EnterLeaveDerived" );
 
 			fsm.SetState( std::make_unique<InitialState>() );
+			fsm.Tick();
 
 			REQUIRE( d.count == 0 );
 			REQUIRE( fsm.GetStateName() == "InitialState" );
@@ -60,14 +64,18 @@ SCENARIO( "Enter method causes state change" )
 			fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<EnterChangesState>(),
 			                                   std::make_shared<FsmTestLogger>() };
 
+			fsm.Tick();
+
 			THEN( "Verify that the state has changed exactly two times - initial and new state" )
 			{
+				fsm.Tick();
 				REQUIRE( fsm.GetStateChangeCounter() == 2 );
 				REQUIRE( fsm.GetStateName() == "FinalState" );
 			}
 		}
 	}
 }
+
 
 SCENARIO( "Leave method causes state change" )
 {
@@ -76,16 +84,20 @@ SCENARIO( "Leave method causes state change" )
 		fsm::FSM<EnterLeaveBaseState> fsm{ std::make_unique<LeaveChangesState>(), std::make_shared<FsmTestLogger>() };
 		EnterLeaveTestData d;
 
+		fsm.Tick();
+
 		REQUIRE( fsm.GetStateChangeCounter() == 1 );
 		REQUIRE( fsm.GetStateName() == "LeaveChangesState" );
 
 		WHEN( "Attempt to set new state" )
 		{
 			fsm.SetState( std::make_unique<EnterLeaveDerived>( d ) );
+			fsm.Tick();
+			fsm.Tick();
 
 			THEN( "The desired state is replaced with the state set in the Leave() method" )
 			{
-				REQUIRE( fsm.GetStateChangeCounter() == 2 );
+				REQUIRE( fsm.GetStateChangeCounter() == 3 );
 				REQUIRE( fsm.GetStateName() == "FinalState" );
 			}
 		}
@@ -99,10 +111,11 @@ SCENARIO( "Send an event, have state react to it" )
 		Counter c;
 		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateListeningToEvents>( c ),
 		                              std::make_shared<FsmTestLogger>() };
+		fsm.Tick();
 
 		REQUIRE( fsm.GetStateName() == "StateListeningToEvents" );
 
-		WHEN( "State sends an event to itself" )
+		WHEN( "Work sends an event to itself" )
 		{
 			fsm.Tick(); // First for sending the event
 			fsm.Tick(); // Second for processing the event
@@ -126,6 +139,7 @@ SCENARIO( "When there are multiple events waiting and the state changes, the eve
 		Counter c;
 		fsm::FSM<EventBaseState> fsm{ std::make_unique<StateThatSendsEventOnTick>( c ),
 		                              std::make_shared<FsmTestLogger>() };
+		fsm.Tick();
 
 		REQUIRE( fsm.GetStateName() == "StateThatSendsEventOnTick" );
 

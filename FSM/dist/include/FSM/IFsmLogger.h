@@ -15,6 +15,8 @@ public:
 
 	virtual void LeavingState( const std::string state ) = 0;
 
+	virtual void ActivatingState( const std::string state ) = 0;
+
 	virtual ~IFsmLogger()
 	{}
 };

@@ -13,5 +13,7 @@ public:
 	void EnteringState( const std::string state ) override;
 
 	void LeavingState( const std::string state ) override;
+
+	void ActivatingState( const std::string state ) override;
 };
 

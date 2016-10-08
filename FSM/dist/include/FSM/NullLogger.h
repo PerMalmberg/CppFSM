@@ -12,7 +12,9 @@ class NullLogger : public IFsmLogger
 {
 	void EnteringState( const std::string state ) override {}
 
-	void LeavingState( const std::string state ) override {};
+	void LeavingState( const std::string state ) override {}
+
+	virtual void ActivatingState( const std::string state ) {}
 };
 
 }

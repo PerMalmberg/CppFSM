@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../FSM/.idea/TemplatedFSM.iml" filepath="$PROJECT_DIR$/../FSM/.idea/TemplatedFSM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/CppFSM.iml" filepath="$PROJECT_DIR$/.idea/CppFSM.iml" />
     </modules>
   </component>
 </project>

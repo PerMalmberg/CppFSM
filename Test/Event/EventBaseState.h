@@ -18,10 +18,11 @@ class EventBaseState
 public:
 	EventBaseState( const std::string& name );
 
-	virtual void Event( EventA& event )
-	{}
+	virtual void Event( EventA& )
+	{		
+	}
 
-	virtual void Event( CountDownOnDestruction& event )
+	virtual void Event( CountDownOnDestruction& )
 	{}
 
 };
