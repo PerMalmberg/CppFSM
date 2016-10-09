@@ -12,7 +12,7 @@ StateThatSendsEventOnTick::StateThatSendsEventOnTick( Counter& c )
 
 void StateThatSendsEventOnTick::Tick()
 {
-	// Send to events
+	// Send two events
 	GetFSM().EnqueueEvent( std::make_unique<CountDownOnDestruction>(myCounter) );
 	GetFSM().EnqueueEvent( std::make_unique<CountDownOnDestruction>(myCounter) );
 

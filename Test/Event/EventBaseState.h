@@ -6,9 +6,9 @@
 
 #include <FSM/BaseState.h>
 
-class EventA;
 
 // Forward declare your events
+class EventA;
 class CountDownOnDestruction;
 
 class EventBaseState
@@ -19,11 +19,11 @@ class EventBaseState
 public:
 	EventBaseState( const std::string& name );
 
-	virtual void Event( EventA& )
+	void Event( EventA& ) override
 	{		
 	}
 
-	virtual void Event( CountDownOnDestruction& )
+	void Event( CountDownOnDestruction& ) override
 	{}
 
 };
