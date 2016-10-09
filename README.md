@@ -162,6 +162,6 @@ When done, the event handler for DoWork sends an event do signal the continuatio
 ***Note:*** When enqueueing an event it will remain queued until the state returns from whatever work it is performing, so make sure not to create infinite/waiting loops in your states. 
 
 ##Changing states
-Like events, when telling the FSM to set a new state, it is actually queued until the current state returns relinquishes control to the FSM. 
+Like events, when telling the FSM to set a new state, it is actually queued until the current state relinquishes control to the FSM. 
 
  As such, calling ```GetFSM().SetState( std::make_unique<TheNewState>( ... ) ); ``` and then performing additional work is safe, although the program flow becomes clearer when you do not.   
