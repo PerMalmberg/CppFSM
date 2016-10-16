@@ -14,7 +14,7 @@ class NullLogger : public IFsmLogger
 
 	void LeavingState( const std::string state ) override {}
 
-	virtual void ActivatingState( const std::string state ) {}
+	void ActivatingState( const std::string state ) override {}
 };
 
 }
