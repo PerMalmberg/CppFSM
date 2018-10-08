@@ -1,13 +1,13 @@
 # CppFSM
 An event driven, templated, hierachial Finite State Machine in simple C++
 
-#Why
+# Why
 There are many implementations of Finite State Machines available, so why another one? I wanted a completely
 (or as near as possible) event driven FSM in simple modern C++. I also wanted to hide the complexities from
 the user, so that s/he can concentrate on the actualy task at hand. A framework shall help the user, not put 
 additional burden in their laps.
 
-#What
+# What
   * Hierarchical states, allowing for easy extension of existing state behaviour.
   * Correct call order for Enter and Leave methods, including chained Enter/Leave for the entire state class hierarchy.
       * No overlapping of states - a state is really left before the next is entered. Naturally, constructors and destructors are 
@@ -23,7 +23,7 @@ additional burden in their laps.
   completely safe - the current state will not be destructed until the FSM reaquires control, which happens when the current state 
   returns from what ever work it was doing.
   
-#How
+# How
 In two easy steps:
 
 1. Initialze an FSM, either with a logger showing state transitions
@@ -71,7 +71,7 @@ protected:
 };
 ```
 
-##Setting up Enter/Leave behavior
+## Setting up Enter/Leave behavior
 First, let me explain what this is all about.
 
 <pre>
@@ -134,10 +134,10 @@ Take note of the access restrictions of the Enter- and Leave-methods and the fac
 
 Once you have done these steps, the FSM will call the Enter- and Leave-methods automatically at the appropriate time during state transition. Both Enter and Leave are optional, so only implement them where they are needed.
 
-###Chained Enter/Leave-methods 
+### Chained Enter/Leave-methods 
 As this FSM supports hierarchical states, it must also make sure each state in the inheritance chain gets its Enter- and Leave-method called, in the correct order. For example, if class B inherits A, A::Enter() must be called before B::Enter(). Likewise, B::Leave() will be called before A::Leave(). This is obviously the same order constructors and destructors are called, but it all happens at a more appropriate time, not at the time of construction or destruction of the state. All you have to do is to follow the steps above to implement Enter and Leave, and this is all taken care of by the FSM.
 
-##Events
+## Events
 Contrary to regular direct calls, states should request a certain task to be executed by sending an event. The benefits are better control of the call stack (it becomes much shorter), it allows for easy reuse of functionality in base states and it helps manage [separations of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns).
  
 So, instead of directly calling DoMyWork(), the state sends an event via the FSM; ```GetFSM().EnqueueEvent( std::make_unique<DoWork>( ... ) );```, and the DoWork method is instead implemented as an EventReceiver.
@@ -161,7 +161,7 @@ When done, the event handler for DoWork sends an event do signal the continuatio
 
 ***Note:*** When enqueueing an event it will remain queued until the state returns from whatever work it is performing, so make sure not to create infinite/waiting loops in your states. 
 
-##Changing states
+## Changing states
 Like events, when telling the FSM to set a new state, it is actually queued until the current state relinquishes control to the FSM. 
 
  As such, calling ```GetFSM().SetState( std::make_unique<TheNewState>( ... ) ); ``` and then performing additional work is safe, although the program flow becomes clearer when you do not.   
